@@ -3,8 +3,11 @@ import * as transitController from '../controllers/transit.controller';
 
 const router = Router();
 
-// Get real-time transit data
+// Get real-time transit data (active alerts)
 router.get('/realtime', transitController.getRealTimeData);
+
+// Get all subway alerts
+router.get('/alerts', transitController.getAllAlerts);
 
 // Get transit data by line (e.g., /api/transit/line/A)
 router.get('/line/:lineId', transitController.getLineData);

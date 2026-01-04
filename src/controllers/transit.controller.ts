@@ -1,38 +1,71 @@
 import { Request, Response } from 'express';
+import { MTAService } from '../services/mta.service';
 
 /**
- * Get real-time transit data
- * GET /api/transit/realtime
+ * Get all subway alerts
+ * GET /api/transit/alerts
  */
-export const getRealTimeData = async (req: Request, res: Response) => {
+export const getAllAlerts = async (req: Request, res: Response) => {
   try {
-    // TODO: Fetch real-time data from MTA API
+    const alerts = await MTAService.getSubwayAlerts();
     res.json({
-      message: 'Real-time transit data endpoint',
-      data: [],
-      timestamp: new Date().toISOString()
+      message: 'All subway alerts',
+      timestamp: new Date().toISOString(),
+      alertCount: alerts.entity.length,
+      alerts: alerts.entity
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch real-time data' });
+    console.error('Error fetching alerts:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch alerts',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 };
 
 /**
- * Get transit data for a specific line
+ * Get active real-time transit alerts
+ * GET /api/transit/realtime
+ */
+export const getRealTimeData = async (req: Request, res: Response) => {
+  try {
+    const alerts = await MTAService.getActiveAlerts();
+    res.json({
+      message: 'Active real-time transit alerts',
+      timestamp: new Date().toISOString(),
+      alertCount: alerts.entity.length,
+      alerts: alerts.entity
+    });
+  } catch (error) {
+    console.error('Error fetching real-time data:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch real-time data',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+/**
+ * Get transit alerts for a specific line
  * GET /api/transit/line/:lineId
  */
 export const getLineData = async (req: Request, res: Response) => {
   try {
     const { lineId } = req.params;
     
-    // TODO: Fetch data for specific line from MTA API
+    const alerts = await MTAService.getAlertsByLine(lineId);
     res.json({
-      message: `Data for line ${lineId}`,
-      lineId,
-      data: []
+      message: `Alerts for line ${lineId}`,
+      lineId: lineId.toUpperCase(),
+      alertCount: alerts.entity.length,
+      alerts: alerts.entity
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch line data' });
+    console.error('Error fetching line data:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch line data',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 };
 

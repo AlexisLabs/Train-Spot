@@ -1,10 +1,12 @@
 import express, { Express, Request, Response } from 'express';
+import cors from 'cors';
 import transitRoutes from './routes/transit.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 // Basic route

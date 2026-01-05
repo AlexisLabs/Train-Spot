@@ -70,6 +70,53 @@ export const getLineData = async (req: Request, res: Response) => {
 };
 
 /**
+ * Get next train times for a specific line
+ * GET /api/transit/line/:lineId/next?station=L08 or ?station=Bedford Av
+ */
+export const getNextTrains = async (req: Request, res: Response) => {
+  try {
+    const { lineId } = req.params;
+    const { station } = req.query;
+    
+    const nextTrains = await MTAService.getNextTrainsByLine(
+      lineId, 
+      station as string | undefined
+    );
+    res.json(nextTrains);
+  } catch (error) {
+    console.error('Error fetching next trains:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch next trains',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+/**
+ * Get stations for a specific line
+ * GET /api/transit/line/:lineId/stations
+ */
+export const getLineStations = async (req: Request, res: Response) => {
+  try {
+    const { lineId } = req.params;
+    
+    const stations = MTAService.getStationsForLine(lineId);
+    res.json({
+      message: `Stations for line ${lineId.toUpperCase()}`,
+      lineId: lineId.toUpperCase(),
+      count: stations.length,
+      stations
+    });
+  } catch (error) {
+    console.error('Error fetching line stations:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch line stations',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+};
+
+/**
  * Get transit data for a specific station
  * GET /api/transit/station/:stationId
  */

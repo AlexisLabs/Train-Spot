@@ -52,3 +52,21 @@ export interface MTAAlertsResponse {
   entity: MTAAlert[];
 }
 
+/**
+ * Next train arrival information
+ */
+export interface NextTrain {
+  destination: string;
+  minutes: number;
+  routeId: string;
+}
+
+export interface NextTrainsResponse {
+  message: string;
+  timestamp: string;
+  lineId: string;
+  stationId?: string;
+  stationName?: string;
+  times: NextTrain[];
+}
+

@@ -9,6 +9,13 @@ router.get('/realtime', transitController.getRealTimeData);
 // Get all subway alerts
 router.get('/alerts', transitController.getAllAlerts);
 
+// Get next train times for a line (e.g., /api/transit/line/A/next?station=Bedford Av)
+// MUST come before /line/:lineId to match correctly
+router.get('/line/:lineId/next', transitController.getNextTrains);
+
+// Get stations for a line (e.g., /api/transit/line/L/stations)
+router.get('/line/:lineId/stations', transitController.getLineStations);
+
 // Get transit data by line (e.g., /api/transit/line/A)
 router.get('/line/:lineId', transitController.getLineData);
 
